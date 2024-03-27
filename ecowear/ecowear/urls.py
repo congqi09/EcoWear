@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from mypage.views import getAuctionList
+from mypage.views import getItemList, getAuctionList, getBidList
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('item/', getItemList, name='item_list'),
     path('auction/', getAuctionList, name='auction_list'),
+    path('bid/', getBidList, name='bid_list'),
 ]

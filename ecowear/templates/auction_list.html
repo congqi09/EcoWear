@@ -1,42 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>My auction list</title>
+    <title>My Auction List</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
         }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-        }
-        .item {
-            border: 1px solid #ccc;
-            margin: 10px;
+        th, td {
             padding: 10px;
-            width: 300px;
         }
-        .item img {
-            max-width: 100%;
-            height: auto;
-        }
-        .description {
-            margin-top: 10px;
+        th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
 <body>
-    <h1>My auction list</h1>
-    <div class="container">
-        {% for row in data %}
-        <div class="item">
-            <img src="{{ row.3 }}" alt="{{ row.1 }}">
-            <h2>{{ row.1 }}</h2>
-            <p class="description">{{ row.2 }}</p>
-        </div>
-        {% endfor %}
-    </div>
+    <h1>My Auction List</h1>
+
+    <section>
+        <h2>搜索和过滤</h2>
+        <form id="searchForm">
+            <input type="text" name="search" placeholder="搜索...">
+            <select name="status">
+                <option value="">选择状态</option>
+                <option value="进行中">进行中</option>
+                <option value="已结束">已结束</option>
+                <option value="未开始">未开始</option>
+            </select>
+            <button type="submit">搜索</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>拍卖项</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>拍卖ID</th>
+                    <th>物品ID</th>
+                    <th>卖家ID</th>
+                    <th>买家ID</th>
+                    <th>状态</th>
+                    <th>起始价格</th>
+                    <th>当前出价</th>
+                    <th>一口价</th>
+                    <th>发布日期</th>
+                    <th>结束日期</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row.0 }}</td>
+                    <td>{{ row.1 }}</td>
+                    <td>{{ row.2 }}</td>
+                    <td>{{ row.3 }}</td>
+                    <td>{{ row.4 }}</td>
+                    <td>{{ row.5 }}</td>
+                    <td>{{ row.6 }}</td>
+                    <td>{{ row.7 }}</td>
+                    <td>{{ row.8 }}</td>
+                    <td>{{ row.9 }}</td>
+                    <td>
+                        <a href="">操作</a>
+                    </td>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
 </body>
 </html>
