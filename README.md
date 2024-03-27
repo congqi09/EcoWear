@@ -3,10 +3,10 @@
 ```
 登陆 （注册、登陆、改密码）                 KECHEN
 首页 浏览 （购物展示，搜索，收藏，竞标）     WENXIN
-我的竞标 （变更状态，评论）                 CONGQI
 在售商品（item，auction，管理 - 变更状态）  CONGQI
+我的竞标 （变更状态，评论）                 CONGQI
 Profile、Message                          CHANGYU
-统计页面
+统计页面?
 ```
 
 ## Start to Develop

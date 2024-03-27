@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from mypage.views import getAuctionList
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auction/', getAuctionList, name='auction_list'),
 ]
