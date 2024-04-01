@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users.apps.UsersConfig'
 ]
 
 MIDDLEWARE = [
@@ -77,17 +78,36 @@ WSGI_APPLICATION = 'ecowear.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ecowear',
-        'USER': os.environ.get('db_user'),
-        'PASSWORD': os.environ.get('db_password'),
-        'HOST': os.environ.get('db_host'),
-        'PORT': '3306',
-    }
-}
+import pymysql  # noqa: 402
+pymysql.version_info = (1, 4, 6, 'final', 0)  # change mysqlclient version
+pymysql.install_as_MySQLdb()
 
+# [START db_setup]
+if os.getenv('GAE_APPLICATION', None):
+    ...
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.mysql',
+    #         'HOST': '/cloudsql/tokyo-rider-417600:us-west1:changyu5200',
+    #         'USER': 'root',
+    #         'PASSWORD': 'changyu5200',
+    #         'NAME': 'mailorder',
+    #     }
+    # }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'ecowear',
+            # 'USER': os.environ.get('db_user'),
+            # 'PASSWORD': os.environ.get('db_password'),
+            # 'HOST': os.environ.get('db_host'),
+            'USER': 'root',
+            'PASSWORD': 'abcd1234',
+            'HOST': '127.0.0.1',
+            'PORT': '3306',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
