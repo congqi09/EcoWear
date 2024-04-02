@@ -17,16 +17,14 @@ Profile、Message                          CHANGYU
 
 2. enter the virtual env: 
 
-    win `devenv\scripts\activate`, mac `source dbenv/bin/activates`
+    win `devenv\scripts\activate`, mac `source devenv/bin/activate`
 
 3. install dependencies (only first time):
 
     `pip install Django mysqlclient mysql-connector-python PyMySQL python-dotenv`
 
-4. create new app
-
-    `python manage.py startapp [appname]`
-
-5. run server
+4. run server
 
     `python manage.py runserver`
+
+5. go to http://127.0.0.1:8000/mypage/

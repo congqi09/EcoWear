@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>EcoWear Login</title>
+{#	 <link rel="stylesheet" href="{% static 'admin/css/style.css' %}">#}
+</head>
+
+<body>
+	<div class="main">
+		<h1>EcoWear</h1>
+		<h3>Enter your login credentials</h3>
+		<form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Login</button>
+
+{#			<label for="username">#}
+{#				Username:#}
+{#			</label>#}
+{#			<input type="text"#}
+{#				id="username"#}
+{#				name="username"#}
+{#				placeholder="Enter your Username" required>#}
+{##}
+{#			<label for="password">#}
+{#				Password:#}
+{#			</label>#}
+{#			<input type="password"#}
+{#				id="password"#}
+{#				name="password"#}
+{#				placeholder="Enter your Password" required>#}
+{##}
+{#			<div class="wrap">#}
+{#				<button type="submit">#}
+{#					Submit#}
+{#				</button>#}
+{#			</div>#}
+		</form>
+		<p>Not registered?
+			<a href="{% url 'signup' %}"
+			style="text-decoration: none;">
+				Sign up here
+			</a>
+		</p>
+	</div>
+</body>
+
+</html>

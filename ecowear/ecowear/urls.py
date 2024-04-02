@@ -15,14 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
-
-from mypage.views import getItemList, getAuctionList, getBidList
+from django.shortcuts import redirect
+from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('item/', getItemList, name='item_list'),
-    path('auction/', getAuctionList, name='auction_list'),
-    path('bid/', getBidList, name='bid_list'),
-     path('', include('users.urls')),
+    path('mypage/', include('mypage.urls')),
+    path('', lambda request: redirect('mypage/login', permanent=True)),
+    path('', include('users.urls'))
 ]

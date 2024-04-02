@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+    'mypage'
 ]
 
 MIDDLEWARE = [
@@ -78,36 +79,17 @@ WSGI_APPLICATION = 'ecowear.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-import pymysql  # noqa: 402
-pymysql.version_info = (1, 4, 6, 'final', 0)  # change mysqlclient version
-pymysql.install_as_MySQLdb()
-
-# [START db_setup]
-if os.getenv('GAE_APPLICATION', None):
-    ...
-    # DATABASES = {
-    #     'default': {
-    #         'ENGINE': 'django.db.backends.mysql',
-    #         'HOST': '/cloudsql/tokyo-rider-417600:us-west1:changyu5200',
-    #         'USER': 'root',
-    #         'PASSWORD': 'changyu5200',
-    #         'NAME': 'mailorder',
-    #     }
-    # }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'ecowear',
-            # 'USER': os.environ.get('db_user'),
-            # 'PASSWORD': os.environ.get('db_password'),
-            # 'HOST': os.environ.get('db_host'),
-            'USER': 'root',
-            'PASSWORD': 'abcd1234',
-            'HOST': '127.0.0.1',
-            'PORT': '3306',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ecowear',
+        'USER': os.environ.get('db_user'),
+        'PASSWORD': os.environ.get('db_password'),
+        'HOST': os.environ.get('db_host'),
+        'PORT': '3306',
     }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -144,8 +126,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+LOGIN_URL = '/mypage/login/'
+
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = ('mypage.User')
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
