@@ -2,14 +2,15 @@ import logging
 import uuid
 from uuid import UUID
 
+from django.urls import reverse
 from django.contrib.auth import login, authenticate, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.hashers import make_password, check_password
 from django.db import connection
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
-from mypage.forms import SignUpForm, LoginForm
+from mypage.forms import SignUpForm, LoginForm, UserProfileForm
 
 from mypage.models import User
 
@@ -72,7 +73,8 @@ def signup_view(request):
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('home')
+        user = User.objects.get(username=request.user.username)
+        return render(request, 'home.html', {'user': user})
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -81,17 +83,33 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return render(request, 'home.html', {'user': user})
         else:
             msg = 'Error Login'
             form = AuthenticationForm(request.POST)
             return render(request, 'login.html', {'form': form, 'msg': msg})
-
     else:
         form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
-
+    
+@login_required
+def user_profile(request, user_id):
+    user = User.objects.get(userId=user_id)
+    return render(request, 'users/user_profile.html', {'user': user})
 
 @login_required
-def home_view(request):
-    return render(request, 'home.html')
+def edit_user_profile(request, user_id):
+    user = get_object_or_404(User, userId=user_id)
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return render(request, 'users/user_profile.html', {'user': user})
+    else:
+        form = UserProfileForm(instance=user)
+    return render(request, 'users/user_form.html', {'form': form})
+
+@login_required
+def home_view(request, user_id):
+    user = get_object_or_404(User, userId=user_id)
+    return render(request, 'home.html', {'user': user})

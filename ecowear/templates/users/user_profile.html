@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            max-width: 200px;
+            border-radius: 100%;
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ user.username }}</h1>
+        <!-- <img src="{{ user.profilePicture }}" alt="Profile Picture"> -->
+        <ul>
+            <li><label>First Name:</label> {{ user.firstname }}</li>
+            <li><label>Last Name:</label> {{ user.lastname }}</li>
+            <li><label>Email:</label> {{ user.email }}</li>
+            <li><label>Address:</label> {{ user.address }}</li>
+            <li><label>Phone:</label> {{ user.phone }}</li>
+            <li><label>User Group:</label> {{ user.userGroup }}</li>
+            <li><label>User Rating:</label> {{ user.userRating }}</li>
+            <li><label>Register Date:</label> {{ user.registerDate }}</li>
+            <li><label>Last Login Date:</label> {{ user.lastLoginDate }}</li>
+        </ul>
+    </div>
+    <a href="{% url 'edit_user' user_id=user.userId%}" class="btn btn-primary">Edit</a>
+</body>
+</html>

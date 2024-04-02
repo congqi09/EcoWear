@@ -20,6 +20,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('mypage/', include('mypage.urls')),
-    path('', lambda request: redirect('mypage/login', permanent=True)),
-    path('', include('users.urls'))
+    path('', lambda request: redirect('mypage/login', permanent=True))
+    # path('', include('users.urls'))
 ]
