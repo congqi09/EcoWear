@@ -3,7 +3,7 @@ import uuid
 from uuid import UUID
 
 from django.urls import reverse
-from django.contrib.auth import login, authenticate, get_user_model
+from django.contrib.auth import login, authenticate, get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.hashers import make_password, check_password
@@ -113,3 +113,8 @@ def edit_user_profile(request, user_id):
 def home_view(request, user_id):
     user = get_object_or_404(User, userId=user_id)
     return render(request, 'home.html', {'user': user})
+
+def logout_view(request):
+    logout(request)
+    # Redirect to a success page.
+    return redirect('login')  # Adjust the redirect as needed
