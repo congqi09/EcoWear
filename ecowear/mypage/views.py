@@ -10,9 +10,9 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.db import connection
 from django.shortcuts import render, redirect, get_object_or_404
 
-from mypage.forms import SignUpForm, LoginForm, UserProfileForm
+from mypage.forms import ItemForm, SignUpForm, LoginForm, UserProfileForm
 
-from mypage.models import User
+from mypage.models import User, Item
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -27,6 +27,17 @@ def getItemList(request):
         "data": rows
     }
     return render(request, 'item_list.html', context)
+
+def edit_item(request, item_id):
+    item = get_object_or_404(Item, itemid=item_id)
+    if request.method == 'POST':
+        form = ItemForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return render(request, 'item_list.html')
+    else:
+        form = ItemForm(instance=item)
+    return render(request, 'item_edit.html', {'form': form})
 
 
 def getAuctionList(request):
