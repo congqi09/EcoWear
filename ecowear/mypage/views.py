@@ -28,6 +28,7 @@ def getItemList(request):
     }
     return render(request, 'item_list.html', context)
 
+
 def edit_item(request, item_id):
     item = get_object_or_404(Item, itemid=item_id)
     if request.method == 'POST':
@@ -102,11 +103,13 @@ def login_view(request):
     else:
         form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
-    
+
+
 @login_required
 def user_profile(request, user_id):
     user = User.objects.get(userId=user_id)
     return render(request, 'users/user_profile.html', {'user': user})
+
 
 @login_required
 def edit_user_profile(request, user_id):
@@ -120,10 +123,12 @@ def edit_user_profile(request, user_id):
         form = UserProfileForm(instance=user)
     return render(request, 'users/user_form.html', {'form': form})
 
+
 @login_required
 def home_view(request, user_id):
     user = get_object_or_404(User, userId=user_id)
     return render(request, 'home.html', {'user': user})
+
 
 def logout_view(request):
     logout(request)
