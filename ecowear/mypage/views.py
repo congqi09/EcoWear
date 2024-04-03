@@ -26,16 +26,6 @@ def edit_item(request, item_id):
     return render(request, 'item_edit.html', {'form': form})
 
 
-def getBidList(request):
-    cursor = connection.cursor()
-    cursor.execute('''SELECT bidId, auctionId, bidderId, bidAmount, bidTime FROM Bid''')
-    rows = cursor.fetchall()
-    context = {
-        "data": rows
-    }
-    return render(request, 'bid_list.html', context)
-
-
 def signup_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -144,6 +134,31 @@ def getAuctionList(request):
             "data": rows
         }
         return render(request, 'auction_list.html', context)
+    else:
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
+
+
+@login_required
+def getBidList(request):
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.username)
+        cursor = connection.cursor()
+        cursor.execute(
+            '''SELECT
+                i.title,
+                u.username,
+                b.bidAmount,
+                b.bidTime
+            FROM Bid b LEFT JOIN Auction a ON b.auctionId = a.auctionId
+                LEFT JOIN Item i ON a.itemId = i.itemId
+                LEFT JOIN User u ON a.sellerId = u.userId
+            WHERE b.bidderId = ''' + str(user.userId) + ";")
+        rows = cursor.fetchall()
+        context = {
+            "data": rows
+        }
+        return render(request, 'bid_list.html', context)
     else:
         form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
