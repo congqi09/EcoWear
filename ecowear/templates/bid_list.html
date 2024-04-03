@@ -1,47 +1,43 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <title>My Bid List</title>
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
-    <h1>My Bid List</h1>
+{% extends "header.html" %}
 
-    <section>
-        <table>
-            <thead>
-                <tr>
-                    <th>出价ID</th>
-                    <th>拍卖ID</th>
-                    <th>竞标者ID</th>
-                    <th>出价金额</th>
-                    <th>出价时间</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in data %}
-                <tr>
-                    <td>{{ row.0 }}</td>
-                    <td>{{ row.1 }}</td>
-                    <td>{{ row.2 }}</td>
-                    <td>{{ row.3 }}</td>
-                    <td>{{ row.4 }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </section>
-</body>
-</html>
+{% block content %}
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<h1>My Bid List</h1>
+
+<section>
+    <table>
+        <thead>
+            <tr>
+                <th>出价ID</th>
+                <th>拍卖ID</th>
+                <th>竞标者ID</th>
+                <th>出价金额</th>
+                <th>出价时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row.0 }}</td>
+                <td>{{ row.1 }}</td>
+                <td>{{ row.2 }}</td>
+                <td>{{ row.3 }}</td>
+                <td>{{ row.4 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

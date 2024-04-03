@@ -10,7 +10,6 @@ urlpatterns = [
     path('user_profile/<int:user_id>/', user_profile, name='user_profile'),
     path('user_profile/<int:user_id>/edit/', edit_user_profile, name='edit_user'),
     path('home/', home_view, name='home'),
-    path('admin/', admin.site.urls),
     path('auction/', getAuctionList, name='auction'),
-    path('bid/', getBidList, name='bid_list'),
+    path('bid/', getBidList, name='bid'),
 ]

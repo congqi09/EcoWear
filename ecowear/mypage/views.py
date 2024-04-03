@@ -1,17 +1,12 @@
 import logging
-import uuid
-from uuid import UUID
 
-from django.urls import reverse
-from django.contrib.auth import login, authenticate, get_user_model, logout
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.hashers import make_password, check_password
 from django.db import connection
 from django.shortcuts import render, redirect, get_object_or_404
 
-from mypage.forms import ItemForm, SignUpForm, LoginForm, UserProfileForm
-
+from mypage.forms import ItemForm, SignUpForm, UserProfileForm
 from mypage.models import User, Item
 
 logging.basicConfig(level=logging.INFO)
@@ -74,7 +69,7 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return render(request, 'home.html', {'user': user})
+            return redirect('home')
         else:
             msg = 'Error Login'
             form = AuthenticationForm(request.POST)
