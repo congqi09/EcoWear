@@ -67,3 +67,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+
+class Item(models.Model):
+    itemid = models.IntegerField(db_column='itemId', primary_key=True)  # Field name made lowercase.
+    title = models.CharField(max_length=33)
+    description = models.CharField(max_length=255, blank=True, null=True)
+    categoryid = models.IntegerField(db_column='categoryId', blank=True, null=True)  # Field name made lowercase.
+    size = models.CharField(max_length=33, blank=True, null=True)
+    brand = models.CharField(max_length=33, blank=True, null=True)
+    itemcondition = models.CharField(db_column='itemCondition', max_length=15, blank=True, null=True)  # Field name made lowercase.
+    image = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'Item'
