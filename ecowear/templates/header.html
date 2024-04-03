@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-xl navbar-primary bg-primary fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand text-light" href="{% url 'home' %}">EcoWear</a>
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-light">
+      <li class="nav-item">
+        <a
+          class="nav-link active text-light"
+          aria-current="page"
+          href="{% url 'home' %}">
+          Home</a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link active text-light"
+          aria-current="page"
+          href="{% url 'auction' %}">
+          My Auction List</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    {% if user.is_authenticated %}
+    <li class="nav-item text-light">
+      <h6 class="nav-link active">
+        Logged In as <strong>{{ user.username }}</strong>
+      </h6>
+    </li>
+    <li class="nav-item">
+      <a
+        class="btn btn-outline-light ml-4 btn-sm mt-1"
+        href="{% url 'logout' %}"
+        role="button">Logout</a>
+    </li>
+    {% endif %}
+    </ul>
+  </div>
+</nav>

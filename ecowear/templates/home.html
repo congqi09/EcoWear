@@ -37,60 +37,13 @@
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-xl navbar-primary bg-primary fixed-top">
-      <div class="container-fluid">
-        <a class="navbar-brand text-light" href="{% url 'home' %}">EcoWear</a>
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-light">
-          <li class="nav-item">
-            <a
-              class="nav-link active text-light"
-              aria-current="page"
-              href="{% url 'home' %}"
-              >Home</a
-            >
-          </li>
-        </ul>
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          {% if user.is_authenticated %}
-          <li class="nav-item text-light">
-            <h6 class="nav-link active">
-              Logged In as <strong>{{ user.username }}</strong>
-            </h6>
-          </li>
-          <li class="nav-item">
-            <a
-              class="btn btn-outline-light ml-4 btn-sm mt-1"
-              href="{% url 'logout' %}"
-              role="button"
-              >Logout</a
-            >
-          </li>
-          <li class="nav-item">
-            <a
-              class="btn btn-outline-light btn-sm mr-4 ml-4 mt-1"
-              href="{% url 'login' %}"
-              role="button"
-              >Login</a
-            >
-          </li>
-          <li class="nav-item">
-            <a
-              class="btn btn-outline-light btn-sm mt-1"
-              href="{% url 'signup' %}"
-              role="button"
-              >Sign Up</a
-            >
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-    </nav>
+    {% include "header.html" %}
 
     <div class="container">
       <h1>Item List</h1>
       {% for row in data %}
       <div class="item">
-        <img src="{{ row.3 }}" alt="{{ row.1 }}" />
+        <img src="/static{{ row.3 }}" alt="{{ row.1 }}" />
         <h2>{{ row.1 }}</h2>
         <p class="description">{{ row.2 }}</p>
       </div>

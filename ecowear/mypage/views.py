@@ -19,16 +19,6 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-def getItemList(request):
-    cursor = connection.cursor()
-    cursor.execute('''SELECT itemId, title, description, image FROM Item''')
-    rows = cursor.fetchall()
-    context = {
-        "data": rows
-    }
-    return render(request, 'item_list.html', context)
-
-
 def edit_item(request, item_id):
     item = get_object_or_404(Item, itemid=item_id)
     if request.method == 'POST':
@@ -39,17 +29,6 @@ def edit_item(request, item_id):
     else:
         form = ItemForm(instance=item)
     return render(request, 'item_edit.html', {'form': form})
-
-
-def getAuctionList(request):
-    cursor = connection.cursor()
-    cursor.execute(
-        '''SELECT auctionId, itemId, sellerId, buyerId, status, startPrice, currentBid, buyNowPrice, postDate, endDate FROM Auction''')
-    rows = cursor.fetchall()
-    context = {
-        "data": rows
-    }
-    return render(request, 'auction_list.html', context)
 
 
 def getBidList(request):
@@ -125,9 +104,54 @@ def edit_user_profile(request, user_id):
 
 
 @login_required
-def home_view(request, user_id):
-    user = get_object_or_404(User, userId=user_id)
-    return render(request, 'home.html', {'user': user})
+def home_view(request):
+    if request.user.is_authenticated:
+        cursor = connection.cursor()
+        cursor.execute('''
+            SELECT
+                i.itemId,
+                i.title,
+                i.description,
+                i.image
+            FROM Auction a LEFT JOIN Item i ON a.itemId = i.itemId'''
+            # WHERE a.status = 'active';'''
+        )
+        rows = cursor.fetchall()
+        context = {
+            "data": rows
+        }
+        return render(request, 'home.html', context)
+    else:
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
+
+
+@login_required
+def getAuctionList(request):
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.username)
+        cursor = connection.cursor()
+        cursor.execute(
+            '''SELECT
+                i.title, 
+                u.username, 
+                a.startPrice, 
+                a.currentBid, 
+                a.postDate, 
+                a.endDate,
+                a.status
+            FROM Auction a LEFT JOIN Item i ON a.itemId = i.itemId
+                    LEFT JOIN User u ON a.buyerId = u.userId
+            WHERE a.sellerId = ''' + str(user.userId) + ";"
+        )
+        rows = cursor.fetchall()
+        context = {
+            "data": rows
+        }
+        return render(request, 'auction_list.html', context)
+    else:
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
 
 
 def logout_view(request):

@@ -17,59 +17,37 @@
     </style>
 </head>
 <body>
+    {% include "header.html" %}
+
     <h1>My Auction List</h1>
-
-    <section>
-        <h2>搜索和过滤</h2>
-        <form id="searchForm">
-            <input type="text" name="search" placeholder="搜索...">
-            <select name="status">
-                <option value="">选择状态</option>
-                <option value="进行中">进行中</option>
-                <option value="已结束">已结束</option>
-                <option value="未开始">未开始</option>
-            </select>
-            <button type="submit">搜索</button>
-        </form>
-    </section>
-
-    <section>
-        <h2>拍卖项</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>拍卖ID</th>
-                    <th>物品ID</th>
-                    <th>卖家ID</th>
-                    <th>买家ID</th>
-                    <th>状态</th>
-                    <th>起始价格</th>
-                    <th>当前出价</th>
-                    <th>一口价</th>
-                    <th>发布日期</th>
-                    <th>结束日期</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in data %}
-                <tr>
-                    <td>{{ row.0 }}</td>
-                    <td>{{ row.1 }}</td>
-                    <td>{{ row.2 }}</td>
-                    <td>{{ row.3 }}</td>
-                    <td>{{ row.4 }}</td>
-                    <td>{{ row.5 }}</td>
-                    <td>{{ row.6 }}</td>
-                    <td>{{ row.7 }}</td>
-                    <td>{{ row.8 }}</td>
-                    <td>{{ row.9 }}</td>
-                    <td>
-                        <a href="">操作</a>
-                    </td>
-                {% endfor %}
-            </tbody>
-        </table>
-    </section>
+    <a>Add New Item</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Current Buyer</th>
+                <th>Starting Price</th>
+                <th>Current Price</th>
+                <th>Post Time</th>
+                <th>End Time</th>
+                <th>Status</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row.0 }}</td>
+                <td>{{ row.1 }}</td>
+                <td>{{ row.2 }}</td>
+                <td>{{ row.3 }}</td>
+                <td>{{ row.4 }}</td>
+                <td>{{ row.5 }}</td>
+                <td>{{ row.6 }}</td>
+                <td>{{ row.7 }}</td>
+                <td>Edit</td>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
