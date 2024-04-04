@@ -1,6 +1,6 @@
 h1 {
   font-family: "Arial", sans-serif;
-  font-size: 24px;
+  font-size: 60px;
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -23,6 +23,28 @@ body {
   max-width: 100%;
   height: auto;
 }
+.item h2 {
+  text-align: center;
+}
+
 .description {
   margin-top: 10px;
+}
+
+.img-container {
+  display: flex;
+  justify-content: center;
+
+  align-items: center;
+}
+
+.detail-img {
+  max-width: 60%;
+  border-radius: 8px;
+}
+
+.detail-title {
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 20px;
 }

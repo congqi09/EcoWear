@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from mypage.views import getAuctionList, getBidList, signup_view, login_view, home_view, user_profile, edit_user_profile, logout_view
+from mypage.views import getAuctionList, getBidList, signup_view, login_view, home_view, user_profile, edit_user_profile, logout_view, item_detail
 
 urlpatterns = [
     path('', home_view, name='home'),
@@ -12,4 +12,5 @@ urlpatterns = [
     path('home/', home_view, name='home'),
     path('auction/', getAuctionList, name='auction'),
     path('bid/', getBidList, name='bid'),
+    path('item/<int:item_id>/', item_detail, name='item_detail'),
 ]

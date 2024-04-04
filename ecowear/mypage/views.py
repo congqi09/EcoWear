@@ -167,3 +167,7 @@ def logout_view(request):
     logout(request)
     # Redirect to a success page.
     return redirect('login')  # Adjust the redirect as needed
+
+def item_detail(request, item_id):
+    item = Item.objects.get(itemid=item_id)
+    return render(request, 'item_detail.html', {'item': item})
