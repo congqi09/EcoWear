@@ -3,7 +3,7 @@ from django.urls import path
 from mypage.views import getAuctionList, getBidList, signup_view, login_view, home_view, user_profile, edit_user_profile, logout_view
 
 urlpatterns = [
-    path('', login_view, name='login'),
+    path('', home_view, name='home'),
     path('signup/', signup_view, name='signup'),
     path('login/', login_view, name='login'),
     path("logout/", logout_view, name="logout"),

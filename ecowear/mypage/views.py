@@ -49,8 +49,7 @@ def signup_view(request):
 
 def login_view(request):
     if request.user.is_authenticated:
-        user = User.objects.get(username=request.user.username)
-        return render(request, 'home.html', {'user': user})
+        return redirect('home')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
