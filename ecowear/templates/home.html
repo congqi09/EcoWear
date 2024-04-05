@@ -2,8 +2,9 @@
 <h1>Item List</h1>
 <div class="container">
   {% for row in data %}
-  <div class="item">
+  <div class="item d-flex flex-column">
     <img src="/static{{ row.3 }}" alt="{{ row.1 }}" />
+    <div class="flex-grow-1"></div>
     <h2>{{ row.1 }}</h2>
     <p class="description">{{ row.2 }}</p>
     <div class="d-flex justify-content-center">
