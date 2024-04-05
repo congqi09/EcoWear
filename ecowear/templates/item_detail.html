@@ -1,4 +1,4 @@
-{% extends "header.html" %} {% load static %}{% block content %} 
+{% extends "header.html" %} {% load static %} {% block content %} 
 <br><br><br><br>
 <div class="container shadow-lg w-75">
 <div class="row">
@@ -11,13 +11,12 @@
       <h2 class="detail-title pb-3 mt-5 justify-content-center">{{ item.title }}</h2>
       <p>{{ item.description }}</p>
       {% if user.is_authenticated %}
-    {% if is_favorited %}
+        {% if is_favorited %}
         <a href="{% url 'toggle_favorite' item.itemid %}" class="btn btn-warning">Remove from Favorite List</a>
-    {% else %}
+        {% else %}
         <a href="{% url 'toggle_favorite' item.itemid %}" class="btn btn-success">Add to Favorite List</a>
-    {% endif %}
-{% endif %}
-
+        {% endif %}
+      {% endif %}
     </div>
   </div>
 </div>
