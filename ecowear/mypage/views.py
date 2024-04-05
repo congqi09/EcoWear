@@ -10,8 +10,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 
-from mypage.forms import ItemForm, SignUpForm, UserProfileForm
-from mypage.models import User, Item, Favorite
+from mypage.forms import ItemForm, SignUpForm, UserProfileForm, BidForm
+from mypage.models import User, Item, Favorite, Bid
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -176,7 +176,26 @@ def item_detail(request, item_id):
     item = get_object_or_404(Item, itemid=item_id)
     favorite_item_ids = Favorite.objects.filter(user=request.user).values_list('item__itemid', flat=True)
     is_favorited = item_id in favorite_item_ids
-    return render(request, 'item_detail.html', {'item': item, 'is_favorited': is_favorited})
+    bids = item.bids.all()
+    highest_bid = bids.first() if bids else None
+    bid_form = BidForm()
+
+
+    if request.method == 'POST':
+        bid_form = BidForm(request.POST)
+        if bid_form.is_valid():
+            new_bid = bid_form.save(commit=False)
+            new_bid.item = item
+            new_bid.user = request.user
+            if not highest_bid or new_bid.amount > highest_bid.amount:
+                new_bid.save()
+                return redirect('item_detail', item_id=item_id)
+            else:
+                bid_form.add_error('amount', 'Bid must be higher than current highest bid.')
+
+
+    return render(request, 'item_detail.html', {'item': item, 'is_favorited': is_favorited, 'highest_bid': highest_bid,
+        'bid_form': bid_form})
 
 def toggle_favorite(request, item_id):
     item = get_object_or_404(Item, itemid=item_id)
