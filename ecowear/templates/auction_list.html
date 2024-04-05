@@ -18,36 +18,44 @@
 </head>
 <body>
     {% include "header.html" %}
-
-    <h1>My Auction List</h1>
-    <a>Add New Item</a>
-    <table>
-        <thead>
-            <tr>
-                <th>Item Name</th>
-                <th>Current Buyer</th>
-                <th>Starting Price</th>
-                <th>Current Price</th>
-                <th>Post Time</th>
-                <th>End Time</th>
-                <th>Status</th>
-                <th>Operation</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in data %}
-            <tr>
-                <td>{{ row.0 }}</td>
-                <td>{{ row.1 }}</td>
-                <td>{{ row.2 }}</td>
-                <td>{{ row.3 }}</td>
-                <td>{{ row.4 }}</td>
-                <td>{{ row.5 }}</td>
-                <td>{{ row.6 }}</td>
-                <td>{{ row.7 }}</td>
-                <td>Edit</td>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="container">
+        <div class="col-12">
+            <h1>My Auction List</h1>
+        </div>
+        <div class="col-10"></div>
+        <div class="col-2">
+            <a href="{% url 'add_item' %}" class="btn btn-success">Add New Item</a>
+        </div>
+        <div class="col-12 d-flex justify-content-center mt-5">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Current Buyer</th>
+                        <th>Starting Price</th>
+                        <th>Current Price</th>
+                        <th>Post Time</th>
+                        <th>End Time</th>
+                        <th>Status</th>
+                        <th>Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                    <tr>
+                        <td>{{ row.0 }}</td>
+                        <td>{{ row.1 }}</td>
+                        <td>{{ row.2 }}</td>
+                        <td>{{ row.3 }}</td>
+                        <td>{{ row.4 }}</td>
+                        <td>{{ row.5 }}</td>
+                        <td>{{ row.6 }}</td>
+                        <td>{{ row.7 }}</td>
+                        <td>Edit</td>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

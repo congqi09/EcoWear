@@ -140,6 +140,17 @@ def getAuctionList(request):
     else:
         form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
+    
+@login_required
+def add_item(request):
+    if request.method == 'POST':
+        form = ItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'auction_list.html')
+    else:
+        form = ItemForm()
+    return render(request, 'add_item.html', {'form': form})
 
 
 @login_required
