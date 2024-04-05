@@ -10,6 +10,14 @@
     <div class="col-7">
       <h2 class="detail-title pb-3 mt-5 justify-content-center">{{ item.title }}</h2>
       <p>{{ item.description }}</p>
+      {% if user.is_authenticated %}
+    {% if item in user.favorites.all %}
+        <a href="{% url 'toggle_favorite' item.itemid %}" class="btn btn-warning">Remove from Favorite List</a>
+    {% else %}
+        <a href="{% url 'toggle_favorite' item.itemid %}" class="btn btn-success">Add to Favorite List</a>
+    {% endif %}
+{% endif %}
+
     </div>
   </div>
 </div>

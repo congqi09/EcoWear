@@ -5,9 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.db import connection
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 
 from mypage.forms import ItemForm, SignUpForm, UserProfileForm
-from mypage.models import User, Item
+from mypage.models import User, Item, Favorite
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -171,3 +175,17 @@ def logout_view(request):
 def item_detail(request, item_id):
     item = Item.objects.get(itemid=item_id)
     return render(request, 'item_detail.html', {'item': item})
+
+
+def toggle_favorite(request, item_id):
+    item = get_object_or_404(Item, itemid=item_id)
+    favorite, created = Favorite.objects.get_or_create(user=request.user, item=item)
+    if created:
+        messages.success(request, "Item added to favorites.")
+    else:
+        favorite.delete()
+        messages.success(request, "Item removed from favorites.")
+    return HttpResponseRedirect(reverse('item_detail', args=[item_id]))
+
+
+

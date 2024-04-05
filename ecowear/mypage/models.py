@@ -82,3 +82,14 @@ class Item(models.Model):
     class Meta:
         managed = False
         db_table = 'Item'
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='favorited_by')
+    added_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'item')  # Prevents duplicate favorites
+
+    def __str__(self):
+        return f"{self.user.username} favorited {self.item.title}"
