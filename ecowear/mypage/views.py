@@ -173,9 +173,10 @@ def logout_view(request):
     return redirect('login')  # Adjust the redirect as needed
 
 def item_detail(request, item_id):
-    item = Item.objects.get(itemid=item_id)
-    return render(request, 'item_detail.html', {'item': item})
-
+    item = get_object_or_404(Item, itemid=item_id)
+    favorite_item_ids = Favorite.objects.filter(user=request.user).values_list('item__itemid', flat=True)
+    is_favorited = item_id in favorite_item_ids
+    return render(request, 'item_detail.html', {'item': item, 'is_favorited': is_favorited})
 
 def toggle_favorite(request, item_id):
     item = get_object_or_404(Item, itemid=item_id)
