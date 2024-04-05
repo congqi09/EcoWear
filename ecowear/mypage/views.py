@@ -129,6 +129,7 @@ def getAuctionList(request):
         cursor = connection.cursor()
         cursor.execute(
             '''SELECT
+                i.itemId,
                 i.title, 
                 u.username, 
                 a.startPrice, 
