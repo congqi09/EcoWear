@@ -70,7 +70,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Item(models.Model):
-    itemid = models.IntegerField(db_column='itemId', primary_key=True)  # Field name made lowercase.
+    itemid = models.AutoField(db_column='itemId', primary_key=True)  # Field name made lowercase.
     title = models.CharField(max_length=33)
     description = models.CharField(max_length=255, blank=True, null=True)
     categoryid = models.IntegerField(db_column='categoryId', blank=True, null=True)  # Field name made lowercase.
@@ -80,8 +80,24 @@ class Item(models.Model):
     image = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'Item'
+
+
+class Auction(models.Model):
+    auctionid = models.AutoField(db_column='auctionId', primary_key=True)  # Field name made lowercase.
+    itemid = models.IntegerField(db_column='itemId')  # Field name made lowercase.
+    sellerid = models.IntegerField(db_column='sellerId')  # Field name made lowercase.
+    buyerid = models.IntegerField(db_column='buyerId', blank=True, null=True)  # Field name made lowercase.
+    status = models.CharField(max_length=15)
+    startprice = models.DecimalField(db_column='startPrice', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    currentbid = models.DecimalField(db_column='currentBid', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    buynowprice = models.DecimalField(db_column='buyNowPrice', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    postdate = models.DateField(db_column='postDate', blank=True, null=True)  # Field name made lowercase.
+    enddate = models.DateField(db_column='endDate', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        db_table = 'Auction'
+
 
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')

@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 
-from mypage.forms import ItemForm, SignUpForm, UserProfileForm, BidForm
+from mypage.forms import AuctionForm, ItemForm, SignUpForm, UserProfileForm, BidForm
 from mypage.models import User, Item, Favorite, Bid
 
 logging.basicConfig(level=logging.INFO)
@@ -129,6 +129,7 @@ def getAuctionList(request):
         cursor = connection.cursor()
         cursor.execute(
             '''SELECT
+                i.itemId,
                 i.title, 
                 u.username, 
                 a.startPrice, 
@@ -151,14 +152,26 @@ def getAuctionList(request):
     
 @login_required
 def add_item(request):
-    if request.method == 'POST':
-        form = ItemForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return render(request, 'auction_list.html')
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.username)
+        if request.method == 'POST':
+            item_form = ItemForm(request.POST)
+            auction_form = AuctionForm(request.POST)
+            if item_form.is_valid() and auction_form.is_valid():
+                item = item_form.save()
+                auction = auction_form.save(commit=False)
+                auction.itemid = item.itemid
+                auction.sellerid = user.userId
+                auction.status = 'pending'
+                auction.save()
+                return redirect('auction')
+        else:
+            item_form = ItemForm()
+            auction_form = AuctionForm()
+        return render(request, 'add_item.html', {'item_form': item_form, 'auction_form': auction_form})
     else:
-        form = ItemForm()
-    return render(request, 'add_item.html', {'form': form})
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
 
 
 @login_required
