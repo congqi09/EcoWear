@@ -73,22 +73,30 @@ def login_view(request):
 
 
 @login_required
-def user_profile(request, user_id):
-    user = User.objects.get(userId=user_id)
-    return render(request, 'users/user_profile.html', {'user': user})
+def user_profile(request):
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.username)
+        return render(request, 'users/user_profile.html', {'user': user})
+    else:
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
 
 
 @login_required
-def edit_user_profile(request, user_id):
-    user = get_object_or_404(User, userId=user_id)
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return render(request, 'users/user_profile.html', {'user': user})
+def edit_user_profile(request):
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.username)
+        if request.method == 'POST':
+            form = UserProfileForm(request.POST, instance=user)
+            if form.is_valid():
+                form.save()
+                return render(request, 'users/user_profile.html', {'user': user})
+        else:
+            form = UserProfileForm(instance=user)
+        return render(request, 'users/user_form.html', {'form': form})
     else:
-        form = UserProfileForm(instance=user)
-    return render(request, 'users/user_form.html', {'form': form})
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
 
 
 @login_required
@@ -140,6 +148,17 @@ def getAuctionList(request):
     else:
         form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
+    
+@login_required
+def add_item(request):
+    if request.method == 'POST':
+        form = ItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'auction_list.html')
+    else:
+        form = ItemForm()
+    return render(request, 'add_item.html', {'form': form})
 
 
 @login_required
