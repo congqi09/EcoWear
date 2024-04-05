@@ -187,5 +187,10 @@ def toggle_favorite(request, item_id):
         messages.success(request, "Item removed from favorites.")
     return HttpResponseRedirect(reverse('item_detail', args=[item_id]))
 
+def my_favorites(request):
+    user = request.user
+    favorites = Favorite.objects.filter(user=user).select_related('item')
+    return render(request, 'my_favorites.html', {'favorites': favorites})
+
 
 

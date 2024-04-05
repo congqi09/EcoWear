@@ -1,0 +1,29 @@
+{% extends "header.html" %} {% load static %} {% block content %}
+<div class="container mt-5">
+  <h2>My Favorites</h2>
+  <div class="row">
+    {% for favorite in favorites %}
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <img
+          src="/static{{ favorite.item.image }}"
+          class="card-img-top"
+          alt="{{ favorite.item.title }}"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ favorite.item.title }}</h5>
+          <p class="card-text">{{ favorite.item.description }}</p>
+          <a
+            href="{% url 'item_detail' favorite.item.itemid %}"
+            class="btn btn-success"
+            >View Details</a
+          >
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p>You have no favorite items.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

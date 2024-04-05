@@ -45,8 +45,17 @@
               My Bids</a
             >
           </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a
+              class="nav-link active text-light"
+              href="{% url 'my_favorites' %}"
+              >Favorite List</a
+            >
+          </li>
+          {% endif %}
         </ul>
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
           {% if user.is_authenticated %}
           <li class="nav-item text-light">
             <h6 class="nav-link active">
