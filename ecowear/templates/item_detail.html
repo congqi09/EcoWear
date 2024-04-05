@@ -24,16 +24,13 @@
       <a href="{% url 'toggle_favorite' item.itemid %}" class="btn btn-success"
         >Add to Favorite List</a
       >
-      {% endif %} {% endif %}
-
-      <p>
-        Current highest bid: {% if highest_bid %} ${{ highest_bid.amount }} {%
-        else %} No bids yet. {% endif %}
-      </p>
-
-      {% if user.is_authenticated %}
+      {% endif %} {% endif %} {% if highest_bid %}
+      <p>Current highest bid: ${{ highest_bid.amount }}</p>
+      {% else %}
+      <p>No bids yet.</p>
+      {% endif %} {% if user.is_authenticated %}
       <form method="post">
-        {% csrf_token %} {{ bid_form.as_p }}
+        {% csrf_token %} {{ bid_form }}
         <button type="submit" class="btn btn-primary">Place Bid</button>
       </form>
       {% endif %}

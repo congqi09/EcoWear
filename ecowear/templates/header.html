@@ -59,7 +59,10 @@
           {% if user.is_authenticated %}
           <li class="nav-item text-light">
             <h6 class="nav-link active">
-              Logged In as <a href="{% url 'user_profile' %}"><strong>{{ user.username }}</strong></a>
+              Logged in as
+              <a href="{% url 'user_profile' %}"
+                ><strong>{{ user.username }}</strong></a
+              >
             </h6>
           </li>
           <li class="nav-item">
