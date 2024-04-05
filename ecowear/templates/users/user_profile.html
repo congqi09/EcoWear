@@ -38,6 +38,7 @@
     </style>
 </head>
 <body>
+    {% include "header.html" %}
     <div class="container">
         <h1>{{ user.username }}</h1>
         <!-- <img src="{{ user.profilePicture }}" alt="Profile Picture"> -->
@@ -53,6 +54,6 @@
             <li><label>Last Login Date:</label> {{ user.lastLoginDate }}</li>
         </ul>
     </div>
-    <a href="{% url 'edit_user' user_id=user.userId%}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit</a>
 </body>
 </html>

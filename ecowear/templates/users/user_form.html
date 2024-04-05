@@ -1,5 +1,5 @@
 <!-- templates/users/user_form.html -->
-
+{% extends "header.html" %}
 {% block content %}
     <h1>{% if user.userId %}Edit User{% else %}Create User{% endif %}</h1>
     <form method="post">
