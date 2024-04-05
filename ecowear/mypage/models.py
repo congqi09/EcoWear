@@ -109,3 +109,15 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f"{self.user.username} favorite {self.item.title}"
+    
+
+class Bid(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
+    amount = models.IntegerField()
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="bids")
+
+    def __str__(self):
+        return f"{self.user.username} bid on {self.item.title} for {self.amount}."
+
+    class Meta:
+        ordering = ['-amount']

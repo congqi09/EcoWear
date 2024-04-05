@@ -1,24 +1,43 @@
-{% extends "header.html" %} {% load static %} {% block content %} 
-<br><br><br><br>
+{% extends "header.html" %} {% load static %} {% block content %}
+<br /><br /><br /><br />
 <div class="container shadow-lg w-75">
-<div class="row">
-    <div class="col-5 my-5">
-        <div class="img-container">
-            <img src="/static{{ item.image }}" alt="{{ item.title }}" class="detail-img" />
-        </div>
+  <div class="row">
+    <div class="col-5 mt-5">
+      <div class="img-container">
+        <img
+          src="/static{{ item.image }}"
+          alt="{{ item.title }}"
+          class="detail-img"
+        />
+      </div>
     </div>
     <div class="col-7">
-      <h2 class="detail-title pb-3 mt-5 justify-content-center">{{ item.title }}</h2>
+      <h2 class="detail-title pb-3 mt-5 justify-content-center">
+        {{ item.title }}
+      </h2>
       <p>{{ item.description }}</p>
+      {% if user.is_authenticated %} {% if is_favorited %}
+      <a href="{% url 'toggle_favorite' item.itemid %}" class="btn btn-warning"
+        >Remove from Favorite List</a
+      >
+      {% else %}
+      <a href="{% url 'toggle_favorite' item.itemid %}" class="btn btn-success"
+        >Add to Favorite List</a
+      >
+      {% endif %} {% endif %}
+
+      <p>
+        Current highest bid: {% if highest_bid %} ${{ highest_bid.amount }} {%
+        else %} No bids yet. {% endif %}
+      </p>
+
       {% if user.is_authenticated %}
-        {% if is_favorited %}
-        <a href="{% url 'toggle_favorite' item.itemid %}" class="btn btn-warning">Remove from Favorite List</a>
-        {% else %}
-        <a href="{% url 'toggle_favorite' item.itemid %}" class="btn btn-success">Add to Favorite List</a>
-        {% endif %}
+      <form method="post">
+        {% csrf_token %} {{ bid_form.as_p }}
+        <button type="submit" class="btn btn-primary">Place Bid</button>
+      </form>
       {% endif %}
     </div>
   </div>
-</div>
 </div>
 {% endblock %}
