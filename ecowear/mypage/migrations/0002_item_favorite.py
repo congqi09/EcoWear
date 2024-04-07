@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'Item',
-                'managed': False,
+                'managed': True,
             },
         ),
         migrations.CreateModel(
