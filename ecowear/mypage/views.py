@@ -8,6 +8,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.utils import timezone
+from datetime import timedelta
 
 
 from mypage.forms import AuctionForm, ItemForm, SignUpForm, UserProfileForm, BidForm
@@ -208,6 +210,14 @@ def item_detail(request, item_id):
     item = get_object_or_404(Item, itemid=item_id)
     favorite_item_ids = Favorite.objects.filter(user=request.user).values_list('item__itemid', flat=True)
     is_favorited = item_id in favorite_item_ids
+    bidding_active = item.is_bidding_active()
+    bidding_end_time = item.List_time + timedelta(days=5)
+    time_remaining = bidding_end_time - timezone.now()
+    if time_remaining.total_seconds() > 0:
+        time_remaining = time_remaining
+    else:
+        time_remaining = timedelta(seconds=0)
+
     bids = item.bids.all()
     highest_bid = bids.first() if bids else None
     bid_form = BidForm()
@@ -227,7 +237,7 @@ def item_detail(request, item_id):
 
 
     return render(request, 'item_detail.html', {'item': item, 'is_favorited': is_favorited, 'highest_bid': highest_bid,
-        'bid_form': bid_form})
+        'bid_form': bid_form, 'bidding_active': bidding_active, 'time_remaining': time_remaining, 'bidding_end_time': bidding_end_time})
 
 def toggle_favorite(request, item_id):
     item = get_object_or_404(Item, itemid=item_id)

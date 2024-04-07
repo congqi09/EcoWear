@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.utils import timezone
+from datetime import timedelta
 
 
 class MyUserManager(BaseUserManager):
@@ -78,6 +80,11 @@ class Item(models.Model):
     brand = models.CharField(max_length=33, blank=True, null=True)
     itemcondition = models.CharField(db_column='itemCondition', max_length=15, blank=True, null=True)  # Field name made lowercase.
     image = models.CharField(max_length=255, blank=True, null=True)
+    List_time = models.DateTimeField(default=timezone.now)
+
+    def is_bidding_active(self):
+        return timezone.now() < self.List_time + timedelta(days=5)
+
 
     class Meta:
         db_table = 'Item'

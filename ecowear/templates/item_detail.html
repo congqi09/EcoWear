@@ -28,12 +28,14 @@
       <p>Current highest bid: ${{ highest_bid.amount }}</p>
       {% else %}
       <p>No bids yet.</p>
-      {% endif %} {% if user.is_authenticated %}
+      {% endif %} {% if user.is_authenticated %} {% if bidding_active %}
       <form method="post">
         {% csrf_token %} {{ bid_form }}
         <button type="submit" class="btn btn-primary">Place Bid</button>
       </form>
-      {% endif %}
+      {% else %}
+      <p>The bidding session for this item is over.</p>
+      {% endif %} {% endif %}
     </div>
   </div>
 </div>
