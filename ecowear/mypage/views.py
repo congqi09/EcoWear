@@ -140,7 +140,7 @@ def getAuctionList(request):
                 a.endDate,
                 a.status
             FROM Auction a LEFT JOIN Item i ON a.itemId = i.itemId
-                    LEFT JOIN User u ON a.buyerId = u.userId
+                    LEFT JOIN mypage_user u ON a.buyerId = u.userId
             WHERE a.sellerId = ''' + str(user.userId) + ";"
         )
         rows = cursor.fetchall()
@@ -189,7 +189,7 @@ def getBidList(request):
                 b.bidTime
             FROM Bid b LEFT JOIN Auction a ON b.auctionId = a.auctionId
                 LEFT JOIN Item i ON a.itemId = i.itemId
-                LEFT JOIN User u ON a.sellerId = u.userId
+                LEFT JOIN mypage_user u ON a.sellerId = u.userId
             WHERE b.bidderId = ''' + str(user.userId) + ";")
         rows = cursor.fetchall()
         context = {
