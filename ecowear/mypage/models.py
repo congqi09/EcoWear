@@ -128,3 +128,16 @@ class Bid(models.Model):
 
     class Meta:
         ordering = ['-amount']
+
+class Message(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
+    item_id = models.IntegerField(null=True, blank=True)  # Assuming there's an Item model
+    content = models.TextField(max_length=255)
+    time_sent = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Message from {self.sender} to {self.receiver} sent on {self.time_sent.strftime("%Y-%m-%d %H:%M:%S")}'
+    
+    class Meta:
+        db_table = 'Message'

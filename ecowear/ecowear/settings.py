@@ -83,12 +83,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ecowear',
-        # 'USER': os.environ.get('db_user'),
-        # 'PASSWORD': os.environ.get('db_password'),
-        # 'HOST': os.environ.get('db_host'),
-        'USER': 'root',
-        'PASSWORD':'db-group12',
-        'HOST':'34.82.254.170',
+        'USER': os.environ.get('db_user'),
+        'PASSWORD': os.environ.get('db_password'),
+        'HOST': os.environ.get('db_host'),
+        # 'USER': 'root',
+        # 'PASSWORD':'db-group12',
+        # 'HOST':'34.82.254.170',
         'PORT': '3306',
     }
 }
