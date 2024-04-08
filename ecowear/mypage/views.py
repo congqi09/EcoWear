@@ -184,12 +184,12 @@ def getBidList(request):
             '''SELECT
                 i.title,
                 u.username,
-                b.bidAmount,
+                b.amount,
                 b.bidTime
-            FROM Bid b LEFT JOIN Auction a ON b.auctionId = a.auctionId
-                LEFT JOIN Item i ON a.itemId = i.itemId
+            FROM mypage_bid b LEFT JOIN Item i ON b.item_id = i.itemId
+                LEFT JOIN Auction a ON i.itemId = a.itemId
                 LEFT JOIN mypage_user u ON a.sellerId = u.userId
-            WHERE b.bidderId = ''' + str(user.userId) + ";")
+            WHERE b.user_id = ''' + str(user.userId) + ";")
         rows = cursor.fetchall()
         context = {
             "data": rows
