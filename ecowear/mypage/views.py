@@ -205,7 +205,11 @@ def logout_view(request):
     # Redirect to a success page.
     return redirect('login')  # Adjust the redirect as needed
 
+
+@login_required
 def item_detail(request, item_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
     item = get_object_or_404(Item, itemid=item_id)
     favorite_item_ids = Favorite.objects.filter(user=request.user).values_list('item__itemid', flat=True)
     is_favorited = item_id in favorite_item_ids
@@ -252,7 +256,11 @@ def item_detail(request, item_id):
                     'seller_id': seller_id,
                     })
 
+
+@login_required
 def toggle_favorite(request, item_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
     item = get_object_or_404(Item, itemid=item_id)
     favorite, created = Favorite.objects.get_or_create(user=request.user, item=item)
     if created:
@@ -262,13 +270,20 @@ def toggle_favorite(request, item_id):
         messages.success(request, "Item removed from favorites.")
     return HttpResponseRedirect(reverse('item_detail', args=[item_id]))
 
+
+@login_required
 def my_favorites(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     user = request.user
     favorites = Favorite.objects.filter(user=user).select_related('item')
     return render(request, 'my_favorites.html', {'favorites': favorites})
 
+
 @login_required
 def send_message(request, receiver_id, item_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
     if request.method == 'POST':
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
@@ -283,6 +298,8 @@ def send_message(request, receiver_id, item_id):
 
 @login_required
 def send_message(request, receiver_id, item_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
     receiver = get_object_or_404(User, pk=receiver_id)
     item = get_object_or_404(Item, pk=item_id)  # Assume you need to handle item
     if request.method == 'POST':
@@ -305,13 +322,19 @@ def send_message(request, receiver_id, item_id):
     }
     return render(request, 'send_message.html', context)
 
+
 @login_required
 def message_list(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     messages = Message.objects.filter(receiver=request.user).order_by('-time_sent')
     return render(request, 'messages.html', {'messages': messages})
 
+
 @login_required
 def message_detail(request, message_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
     message = get_object_or_404(Message, message_id=message_id, receiver=request.user)
     item = message.item
     if request.method == 'POST':
