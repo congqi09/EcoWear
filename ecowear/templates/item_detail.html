@@ -69,8 +69,13 @@
       {% endif %} {% if user.is_authenticated %} {% if bidding_active %}
       <form method="post">
         {% csrf_token %} {{ bid_form }}
-        <button type="submit" class="btn btn-primary">Place Bid</button>
+        <button type="submit" name="bid" class="btn btn-primary">Place Bid</button>
       </form>
+      <!-- <form method="get" action="{{ message_form_url }}">
+        {% csrf_token %} {{ message_form }}
+        <button type="submit" name="message" class="btn btn-primary">Contact Seller</button>
+      </form> -->
+      <a href="{% url 'send_message' seller_id item.itemid %}" class="btn btn-primary">Contact Seller</a>
       {% else %}
       <p>The bidding session for this item is over.</p>
       {% endif %} {% endif %}

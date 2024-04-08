@@ -130,9 +130,10 @@ class Bid(models.Model):
         ordering = ['-amount']
 
 class Message(models.Model):
+    message_id = models.AutoField(primary_key=True)  # Field name made lowercase.
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
-    item_id = models.IntegerField(null=True, blank=True)  # Assuming there's an Item model
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='messages')
     content = models.TextField(max_length=255)
     time_sent = models.DateTimeField(auto_now_add=True)
 
@@ -140,4 +141,4 @@ class Message(models.Model):
         return f'Message from {self.sender} to {self.receiver} sent on {self.time_sent.strftime("%Y-%m-%d %H:%M:%S")}'
     
     class Meta:
-        db_table = 'Message'
+         managed = True

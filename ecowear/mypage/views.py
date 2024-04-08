@@ -11,9 +11,8 @@ from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
 
-
-from mypage.forms import AuctionForm, ItemForm, SignUpForm, UserProfileForm, BidForm
-from mypage.models import User, Item, Favorite, Bid
+from mypage.forms import AuctionForm, ItemForm, SignUpForm, UserProfileForm, BidForm, MessageForm
+from mypage.models import User, Item, Favorite, Bid, Message, Auction
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -221,11 +220,16 @@ def item_detail(request, item_id):
     bids = item.bids.all()
     highest_bid = bids.first() if bids else None
     bid_form = BidForm()
-
+    message_form = MessageForm()
+    auction = get_object_or_404(Auction, itemid=item_id)
+    seller_id = auction.sellerid
+    message_form_url = reverse('send_message', kwargs={'receiver_id': auction.sellerid, 'item_id': item.itemid})
 
     if request.method == 'POST':
-        bid_form = BidForm(request.POST)
-        if bid_form.is_valid():
+        bid_form = BidForm(request.POST,  prefix='bid')
+        message_form = MessageForm(request.POST, prefix='message')
+
+        if bid_form.is_valid() and 'bid' in request.POST:
             new_bid = bid_form.save(commit=False)
             new_bid.item = item
             new_bid.user = request.user
@@ -236,8 +240,17 @@ def item_detail(request, item_id):
                 bid_form.add_error('amount', 'Bid must be higher than current highest bid.')
 
 
-    return render(request, 'item_detail.html', {'item': item, 'is_favorited': is_favorited, 'highest_bid': highest_bid,
-        'bid_form': bid_form, 'bidding_active': bidding_active, 'time_remaining': time_remaining, 'bidding_end_time': bidding_end_time})
+    return render(request, 'item_detail.html',
+                   {'item': item, 
+                    'is_favorited': is_favorited, 
+                    'highest_bid': highest_bid,
+                    'bid_form': bid_form, 
+                    'bidding_active': bidding_active, 
+                    'time_remaining': time_remaining, 
+                    'bidding_end_time': bidding_end_time,
+                    'message_form': message_form,
+                    'seller_id': seller_id,
+                    })
 
 def toggle_favorite(request, item_id):
     item = get_object_or_404(Item, itemid=item_id)
@@ -254,5 +267,68 @@ def my_favorites(request):
     favorites = Favorite.objects.filter(user=user).select_related('item')
     return render(request, 'my_favorites.html', {'favorites': favorites})
 
+@login_required
+def send_message(request, receiver_id, item_id):
+    if request.method == 'POST':
+        message_form = MessageForm(request.POST)
+        if message_form.is_valid():
+            msg = message_form.save(commit=False)
+            msg.sender = request.user
+            msg.save()
+            return redirect('messages')
+    else:
+        message_form = MessageForm()
+    return render(request, 'messaging/send_message.html', {'form': message_form})
 
+
+@login_required
+def send_message(request, receiver_id, item_id):
+    receiver = get_object_or_404(User, pk=receiver_id)
+    item = get_object_or_404(Item, pk=item_id)  # Assume you need to handle item
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            msg = form.save(commit=False)
+            msg.sender = request.user
+            msg.receiver = receiver
+            msg.item = item 
+            msg.save()
+            return redirect('messages')
+    else:
+        # Prepopulate the receiver and item fields if you want
+        form = MessageForm(initial={'receiver': receiver, 'item': item})
+
+    context = {
+        'form': form,
+        'receiver_name': receiver.username,
+        'item_name': item.title,  # Assuming your Item model has a 'name' field
+    }
+    return render(request, 'send_message.html', context)
+
+@login_required
+def message_list(request):
+    messages = Message.objects.filter(receiver=request.user).order_by('-time_sent')
+    return render(request, 'messages.html', {'messages': messages})
+
+@login_required
+def message_detail(request, message_id):
+    message = get_object_or_404(Message, message_id=message_id, receiver=request.user)
+    item = message.item
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.sender = request.user
+            reply.receiver = message.sender
+            reply.item = item 
+            reply.save()
+            return redirect('messages')
+    else:
+        form = MessageForm(initial={'receiver': message.sender})
+
+    context = {
+        'form': form,
+        'message': message
+    }    
+    return render(request, 'message_detail.html', context)
 

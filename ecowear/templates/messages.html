@@ -1,0 +1,14 @@
+{% extends "header.html" %}
+
+{% block content %}
+<h2>Inbox</h2>
+<ul>
+    {% for message in messages %}
+    <li>
+        <a href="{% url 'message_detail' message.message_id %}">{{ message.content|truncatewords:5 }} from {{ message.sender.username }} - {{ message.time_sent|date:"M d, Y H:i" }}</a>
+    </li>
+    {% empty %}
+    <li>No messages found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

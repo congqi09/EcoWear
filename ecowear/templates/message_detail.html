@@ -1,0 +1,16 @@
+{% extends "header.html" %}
+
+{% block content %}
+<h2>Message from {{ message.sender.username }}</h2>
+<p><strong>Received:</strong> {{ message.time_sent|date:"M d, Y H:i" }}</p>
+<p>About item: <strong>{{ message.item.title }}</strong></p>
+<p>{{ message.content }}</p>
+<hr>
+<h3>Reply</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Reply</button>
+</form>
+<a href="{% url 'messages' %}">Back to My Messages</a>
+{% endblock %}
