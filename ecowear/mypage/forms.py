@@ -29,12 +29,13 @@ class LoginForm(AuthenticationForm):
     pass
 
 class BidForm(forms.ModelForm):
+    amount = forms.DecimalField(label='Enter Price', decimal_places=2, max_digits=10, 
+                                widget=forms.NumberInput(attrs={'placeholder': 'Enter Price in USD'}))
+    
     class Meta:
         model = Bid
         fields = ["amount"]
-        labels = {
-            "amount" : ('Enter Bid'),
-        }
+
 
 class MessageForm(forms.ModelForm):
     class Meta:

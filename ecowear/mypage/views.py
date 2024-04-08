@@ -231,9 +231,9 @@ def item_detail(request, item_id):
 
     if request.method == 'POST':
         bid_form = BidForm(request.POST,  prefix='bid')
-        message_form = MessageForm(request.POST, prefix='message')
+        # message_form = MessageForm(request.POST, prefix='message')
 
-        if bid_form.is_valid() and 'bid' in request.POST:
+        if bid_form.is_valid():
             new_bid = bid_form.save(commit=False)
             new_bid.item = item
             new_bid.user = request.user

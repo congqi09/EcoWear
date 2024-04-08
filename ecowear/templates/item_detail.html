@@ -75,12 +75,8 @@
         }
       </style>
       <form method="post">
-        {% csrf_token %} {{ bid_form }}
-        <button
-          type="submit"
-          name="bid"
-          class="btn btn-primary top-margin-custom"
-        >
+        {% csrf_token %} {{ bid_form.as_p }}
+        <button type="submit" class="btn btn-primary top-margin-custom">
           Place Bid
         </button>
       </form>
