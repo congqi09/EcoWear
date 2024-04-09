@@ -230,7 +230,7 @@ def item_detail(request, item_id):
     message_form_url = reverse('send_message', kwargs={'receiver_id': auction.sellerid, 'item_id': item.itemid})
 
     if request.method == 'POST':
-        bid_form = BidForm(request.POST,  prefix='bid')
+        bid_form = BidForm(request.POST)
         # message_form = MessageForm(request.POST, prefix='message')
 
         if bid_form.is_valid():
