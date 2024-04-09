@@ -122,10 +122,23 @@ class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     amount = models.IntegerField()
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="bids")
-    bidtime = models.DateField(db_column='bidTime', blank=True, null=True)
+    bidtime = models.DateTimeField(default=timezone.now)
+
 
     def __str__(self):
         return f"{self.user.username} bid on {self.item.title} for {self.amount}."
+    
+    def status(self):
+    # Check if the bidding period is still active
+        if self.item.is_bidding_active():
+            return "Pending"
+        else:
+            # Determine if this bid is the highest for the item
+            highest_bid = self.item.bids.order_by('-amount').first()
+            if self == highest_bid:
+                return "Success"
+            else:
+                return "Failed"
 
     class Meta:
         ordering = ['-amount']

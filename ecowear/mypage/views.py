@@ -177,27 +177,50 @@ def add_item(request):
 
 @login_required
 def getBidList(request):
-    if request.user.is_authenticated:
-        user = User.objects.get(username=request.user.username)
-        cursor = connection.cursor()
-        cursor.execute(
-            '''SELECT
-                i.title,
-                u.username,
-                b.amount,
-                b.bidTime
-            FROM mypage_bid b LEFT JOIN Item i ON b.item_id = i.itemId
-                LEFT JOIN Auction a ON i.itemId = a.itemId
-                LEFT JOIN mypage_user u ON a.sellerId = u.userId
-            WHERE b.user_id = ''' + str(user.userId) + ";")
-        rows = cursor.fetchall()
-        context = {
-            "data": rows
-        }
-        return render(request, 'bid_list.html', context)
-    else:
-        form = AuthenticationForm()
-        return render(request, 'login.html', {'form': form})
+    # if request.user.is_authenticated:
+    #     user = User.objects.get(username=request.user.username)
+    #     bid = Bid.objects.get(user=user)
+    #     cursor = connection.cursor()
+    #     cursor.execute(
+    #         '''SELECT
+    #             i.title,
+    #             u.username,
+    #             b.amount,
+    #             b.bidTime
+    #         FROM mypage_bid b LEFT JOIN Item i ON b.item_id = i.itemId
+    #             LEFT JOIN Auction a ON i.itemId = a.itemId
+    #             LEFT JOIN mypage_user u ON a.sellerId = u.userId
+    #         WHERE b.user_id = ''' + str(user.userId) + ";")
+    #     rows = cursor.fetchall()
+    #     itemStatus = bid.status()
+    #     context = {
+    #         "data": rows,
+    #         "status": itemStatus
+    #     }
+
+    #     return render(request, 'bid_list.html', context)
+    # else:
+    #     form = AuthenticationForm()
+    #     return render(request, 'login.html', {'form': form})
+    user_bids = Bid.objects.filter(user=request.user)
+
+    # Prepare data for each bid, including status
+    bids_with_status = []
+    for bid in user_bids:
+        seller = Auction.objects.get(itemid=bid.item.itemid).sellerid
+        sellerName = User.objects.get(userId=seller).username
+        bids_with_status.append({
+            'title': bid.item.title,
+            'seller_username': sellerName,  # Adjust according to your model relations
+            'amount': bid.amount,
+            'bidTime': bid.bidtime,
+            'status': bid.status()  # Now correctly calling the instance method
+        })
+
+    context = {
+        "data": bids_with_status
+    }
+    return render(request, 'bid_list.html', context)
 
 
 def logout_view(request):
