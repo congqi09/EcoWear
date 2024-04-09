@@ -68,7 +68,11 @@
         }, 1000);
       </script>
 
-      {% endif %} {% if user.is_authenticated %} {% if bidding_active %}
+      {% endif %} {% if user_is_seller %}
+      <p class="top-margin-custom">
+        <strong>You are the seller of this item.</strong>
+      </p>
+      {% else %} {% if user.is_authenticated %} {% if bidding_active %}
       <style>
         .top-margin-custom {
           margin-top: 20px;
@@ -88,7 +92,8 @@
       >
       {% else %}
       <p>The bidding session for this item is over.</p>
-      {% endif %} {% endif %}
+      {% endif %} {% endif %} {% endif %}
+      <br /><br /><br />
     </div>
   </div>
 </div>
