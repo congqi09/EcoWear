@@ -182,12 +182,11 @@ def getBidList(request):
     bids_with_status = []
     for bid in user_bids:
         seller = Auction.objects.get(item=bid.item).seller
-        sellerName = User.objects.get(userId=seller).username
         bids_with_status.append({
             'itemid': bid.item.itemid,
             'title': bid.item.title,
             'sellerid': seller.userId,
-            'seller_username': sellerName,  # Adjust according to your model relations
+            'seller_username': seller.username,
             'amount': bid.amount,
             'bidTime': bid.bidtime,
             'status': bid.status()  # Now correctly calling the instance method
