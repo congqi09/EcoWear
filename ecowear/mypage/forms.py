@@ -23,7 +23,7 @@ class ItemForm(forms.ModelForm):
 class AuctionForm(forms.ModelForm):
     class Meta:
         model = Auction
-        fields = ['startprice', 'enddate']
+        fields = ['startprice', 'endtime']
 
 class LoginForm(AuthenticationForm):
     pass

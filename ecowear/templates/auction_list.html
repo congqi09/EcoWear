@@ -41,15 +41,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for row in data %}
+                    {% for auction in data %}
                     <tr>
-                        <td><a href="{% url 'item_detail' row.0 %}">{{ row.1 }}</a></td>
-                        <td>{{ row.2 }}</td>
-                        <td>{{ row.3 }}</td>
-                        <td>{{ row.4 }}</td>
-                        <td>{{ row.5 }}</td>
-                        <td>{{ row.6 }}</td>
-                        <td>{{ row.7 }}</td>
+                        <td><a href="{% url 'item_detail' auction.itemid %}">{{ auction.item_name }}</a></td>
+                        <td>{{ auction.buyer }}</td>
+                        <td>{{ auction.start_price }}</td>
+                        <td>{{ auction.current_price }}</td>
+                        <td>{{ auction.post_time }}</td>
+                        <td>{{ auction.end_time }}</td>
+                        <td>{{ auction.status }}</td>
                         <td>Edit</td>
                     {% endfor %}
                 </tbody>

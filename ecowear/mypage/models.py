@@ -91,19 +91,16 @@ class Item(models.Model):
 
 
 class Auction(models.Model):
-    auctionid = models.AutoField(db_column='auctionId', primary_key=True)  # Field name made lowercase.
-    itemid = models.IntegerField(db_column='itemId')  # Field name made lowercase.
-    sellerid = models.IntegerField(db_column='sellerId')  # Field name made lowercase.
-    buyerid = models.IntegerField(db_column='buyerId', blank=True, null=True)  # Field name made lowercase.
+    id = models.AutoField(primary_key=True)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='auctions')
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auctions_seller')
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auctions_buyer', blank=True, null=True)
     status = models.CharField(max_length=15)
-    startprice = models.DecimalField(db_column='startPrice', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    currentbid = models.DecimalField(db_column='currentBid', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    buynowprice = models.DecimalField(db_column='buyNowPrice', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    postdate = models.DateField(db_column='postDate', blank=True, null=True)  # Field name made lowercase.
-    enddate = models.DateField(db_column='endDate', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        db_table = 'Auction'
+    startprice = models.DecimalField(max_digits=10, decimal_places=2)
+    currentbid = models.ForeignKey('Bid', on_delete=models.CASCADE, related_name='auctions', blank=True, null=True)
+    buynowprice = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    addtime = models.DateTimeField(default=timezone.now)
+    endtime = models.DateField(default=timezone.now() + timedelta(days=5))
 
 
 class Favorite(models.Model):

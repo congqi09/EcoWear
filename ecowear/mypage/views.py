@@ -102,77 +102,73 @@ def edit_user_profile(request):
 
 @login_required
 def home_view(request):
-    if request.user.is_authenticated:
-        cursor = connection.cursor()
-        cursor.execute('''
-            SELECT
-                i.itemId,
-                i.title,
-                i.description,
-                i.image
-            FROM Auction a LEFT JOIN Item i ON a.itemId = i.itemId'''
-            # WHERE a.status = 'active';'''
-        )
-        rows = cursor.fetchall()
-        context = {
-            "data": rows
-        }
-        return render(request, 'home.html', context)
-    else:
-        form = AuthenticationForm()
-        return render(request, 'login.html', {'form': form})
+    if not request.user.is_authenticated:
+        return redirect('login')
+    auctions = Auction.objects.filter(status='active')
+    auction_list = []
+    for auction in auctions:
+        auction_list.append({
+            'itemid': auction.item.itemid,
+            'item_name': auction.item.title,
+            'image': auction.item.image if auction.item.image else 'https://via.placeholder.com/150',
+            'start_price': auction.startprice,
+            'post_date': auction.addtime,
+            'end_date': auction.endtime,
+            'status': auction.status
+        })
+    context = {
+        "data": auction_list
+    }
+    return render(request, 'home.html', context)
 
 
 @login_required
 def getAuctionList(request):
-    if request.user.is_authenticated:
-        user = User.objects.get(username=request.user.username)
-        cursor = connection.cursor()
-        cursor.execute(
-            '''SELECT
-                i.itemId,
-                i.title, 
-                u.username, 
-                a.startPrice, 
-                a.currentBid, 
-                a.postDate, 
-                a.endDate,
-                a.status
-            FROM Auction a LEFT JOIN Item i ON a.itemId = i.itemId
-                    LEFT JOIN mypage_user u ON a.buyerId = u.userId
-            WHERE a.sellerId = ''' + str(user.userId) + ";"
-        )
-        rows = cursor.fetchall()
-        context = {
-            "data": rows
-        }
-        return render(request, 'auction_list.html', context)
-    else:
-        form = AuthenticationForm()
-        return render(request, 'login.html', {'form': form})
+    if not request.user.is_authenticated:
+        return redirect('login')
     
+    user_auctions = Auction.objects.filter(seller=request.user)
+    auctions_list = []
+    for auction in user_auctions:
+        auctions_list.append({
+            'itemid': auction.item.itemid,
+            'item_name': auction.item.title,
+            'buyerid': auction.buyer.userId if auction.buyer else None,
+            'buyer': auction.buyer.username if auction.buyer else None,
+            'start_price': auction.startprice,
+            'current_price': auction.currentbid.amount if auction.currentbid else None,
+            'post_date': auction.addtime,
+            'end_date': auction.endtime,
+            'status': auction.status
+        })
+    context = {
+        "data": auctions_list
+    }
+    return render(request, 'auction_list.html', context)
+
+
 @login_required
 def add_item(request):
-    if request.user.is_authenticated:
-        user = User.objects.get(username=request.user.username)
-        if request.method == 'POST':
-            item_form = ItemForm(request.POST)
-            auction_form = AuctionForm(request.POST)
-            if item_form.is_valid() and auction_form.is_valid():
-                item = item_form.save()
-                auction = auction_form.save(commit=False)
-                auction.itemid = item.itemid
-                auction.sellerid = user.userId
-                auction.status = 'pending'
-                auction.save()
-                return redirect('auction')
-        else:
-            item_form = ItemForm()
-            auction_form = AuctionForm()
-        return render(request, 'add_item.html', {'item_form': item_form, 'auction_form': auction_form})
+    if not request.user.is_authenticated:
+        return redirect('login')
+    user = request.user
+    if request.method == 'POST':
+        item_form = ItemForm(request.POST)
+        auction_form = AuctionForm(request.POST)
+        if item_form.is_valid() and auction_form.is_valid():
+            item = item_form.save()
+            auction = auction_form.save(commit=False)
+            auction.item = item
+            auction.seller = user
+            auction.buyer = None
+            auction.currentBid = None
+            auction.status = 'active'
+            auction.save()
+            return redirect('auction')
     else:
-        form = AuthenticationForm()
-        return render(request, 'login.html', {'form': form})
+        item_form = ItemForm()
+        auction_form = AuctionForm()
+    return render(request, 'add_item.html', {'item_form': item_form, 'auction_form': auction_form})
 
 
 @login_required
@@ -185,12 +181,12 @@ def getBidList(request):
     # Prepare data for each bid, including status
     bids_with_status = []
     for bid in user_bids:
-        seller = Auction.objects.get(itemid=bid.item.itemid).sellerid
+        seller = Auction.objects.get(item=bid.item).seller
         sellerName = User.objects.get(userId=seller).username
         bids_with_status.append({
             'itemid': bid.item.itemid,
             'title': bid.item.title,
-            'sellerid': seller,
+            'sellerid': seller.userId,
             'seller_username': sellerName,  # Adjust according to your model relations
             'amount': bid.amount,
             'bidTime': bid.bidtime,
@@ -228,11 +224,11 @@ def item_detail(request, item_id):
     highest_bid = bids.first() if bids else None
     bid_form = BidForm()
     message_form = MessageForm()
-    auction = get_object_or_404(Auction, itemid=item_id)
-    seller_id = auction.sellerid
+    auction = get_object_or_404(Auction, item=item)
+    seller = auction.seller
     BidUser = User.objects.get(username=request.user.username)
-    message_form_url = reverse('send_message', kwargs={'receiver_id': auction.sellerid, 'item_id': item.itemid})
-    user_is_seller = BidUser.userId == seller_id
+    message_form_url = reverse('send_message', kwargs={'receiver_id': auction.seller.userId, 'item_id': item.itemid})
+    user_is_seller = BidUser == seller
 
     if request.method == 'POST':
         bid_form = BidForm(request.POST)
@@ -261,7 +257,7 @@ def item_detail(request, item_id):
                     'time_remaining': time_remaining, 
                     'bidding_end_time': bidding_end_time,
                     'message_form': message_form,
-                    'seller_id': seller_id,
+                    'seller_id': seller.userId,
                     'user_is_seller': user_is_seller,
                     })
 

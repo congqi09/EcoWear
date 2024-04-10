@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path
 from mypage.views import add_item, getAuctionList, getBidList, signup_view, login_view, home_view, user_profile, edit_user_profile, logout_view, item_detail, toggle_favorite, my_favorites, send_message, message_list, message_detail
 
