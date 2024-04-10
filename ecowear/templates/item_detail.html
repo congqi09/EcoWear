@@ -24,7 +24,11 @@
       <a href="{% url 'toggle_favorite' item.itemid %}" class="btn btn-success"
         >Add to Favorite List</a
       >
-      {% endif %} {% endif %} {% if highest_bid %}
+      {% endif %} {% endif %}
+      <p class="top-margin-custom" id="startingPrice">
+        Starting Price: ${{ startPrice }}
+      </p>
+      {% if highest_bid %}
       <p class="top-margin-custom">
         Current highest bid: ${{ highest_bid.amount }}
       </p>
@@ -78,12 +82,25 @@
           margin-top: 20px;
         }
       </style>
-      <form method="post">
+      <form method="post" id="bidForm" class="bid-form">
         {% csrf_token %} {{ bid_form.as_p }}
-        <button type="submit" class="btn btn-primary top-margin-custom">
-          Place Bid
-        </button>
+        <button type="submit" class="btn btn-primary">Place Bid</button>
       </form>
+      <script>
+        document.getElementById("bidForm").onsubmit = function (event) {
+          const startingPrice = parseFloat(
+            document.getElementById("startingPrice").textContent.split("$")[1]
+          );
+          const bidAmount = parseFloat(
+            document.getElementById("bidAmount").value
+          );
+
+          if (bidAmount < startingPrice) {
+            alert("Your bid must be higher than the starting price.");
+            event.preventDefault(); // Prevent form submission
+          }
+        };
+      </script>
 
       <a
         href="{% url 'send_message' seller_id item.itemid %}"

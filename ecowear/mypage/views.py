@@ -230,6 +230,7 @@ def item_detail(request, item_id):
     BidUser = User.objects.get(username=request.user.username)
     message_form_url = reverse('send_message', kwargs={'receiver_id': auction.seller.userId, 'item_id': item.itemid})
     user_is_seller = BidUser == seller
+    startPrice = auction.startprice
 
     if request.method == 'POST':
         bid_form = BidForm(request.POST)
@@ -242,6 +243,9 @@ def item_detail(request, item_id):
             if user_is_seller: 
                 messages.error(request, "You cannot bid on your own auction.")
                 return redirect('item_detail', item_id=item_id)
+            if new_bid.amount < startPrice:
+                bid_form.add_error('amount', 'Bid must be higher than the starting price.')
+
             if not highest_bid or new_bid.amount > highest_bid.amount:
                 new_bid.save()
                 return redirect('item_detail', item_id=item_id)
@@ -260,6 +264,7 @@ def item_detail(request, item_id):
                     'message_form': message_form,
                     'seller_id': seller.userId,
                     'user_is_seller': user_is_seller,
+                    'startPrice': startPrice,
                     })
 
 

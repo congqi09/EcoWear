@@ -30,7 +30,10 @@ class LoginForm(AuthenticationForm):
 
 class BidForm(forms.ModelForm):
     amount = forms.DecimalField(label='Enter Price', decimal_places=2, max_digits=10, 
-                                widget=forms.NumberInput(attrs={'placeholder': 'Enter Price in USD'}))
+                                widget=forms.NumberInput(attrs={
+            'placeholder': 'Enter Price in USD', 
+            'id': 'bidAmount'  # Directly specifying the id attribute here
+        }))
     
     class Meta:
         model = Bid

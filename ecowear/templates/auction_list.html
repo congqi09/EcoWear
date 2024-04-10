@@ -44,7 +44,11 @@
                     {% for auction in data %}
                     <tr>
                         <td><a href="{% url 'item_detail' auction.itemid %}">{{ auction.item_name }}</a></td>
+                        {% if buyer %}
                         <td><a href="{% url 'send_message' auction.buyerid auction.itemid %}">{{ auction.buyer }}</td>
+                        {% else %}
+                        <td>No buyer yet</td>
+                        {% endif %}
                         <td>{{ auction.start_price }}</td>
                         <td>{{ auction.current_price }}</td>
                         <td>{{ auction.addtime }}</td>
