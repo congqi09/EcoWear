@@ -130,15 +130,17 @@ def getAuctionList(request):
     user_auctions = Auction.objects.filter(seller=request.user)
     auctions_list = []
     for auction in user_auctions:
+        current_bid = auction.currentbid()
+        buyer = current_bid.user if current_bid else None
         auctions_list.append({
             'itemid': auction.item.itemid,
             'item_name': auction.item.title,
-            'buyerid': auction.buyer.userId if auction.buyer else None,
-            'buyer': auction.buyer.username if auction.buyer else None,
+            'buyerid': buyer.userId if buyer else None,
+            'buyer': buyer.username if buyer else None,
             'start_price': auction.startprice,
-            'current_price': auction.currentbid.amount if auction.currentbid else None,
-            'post_date': auction.addtime,
-            'end_date': auction.endtime,
+            'current_price': current_bid.amount if current_bid else auction.startprice,
+            'addtime': auction.addtime,
+            'endtime': auction.endtime,
             'status': auction.status
         })
     context = {

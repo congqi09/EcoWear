@@ -94,13 +94,15 @@ class Auction(models.Model):
     id = models.AutoField(primary_key=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='auctions')
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auctions_seller')
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auctions_buyer', blank=True, null=True)
     status = models.CharField(max_length=15)
     startprice = models.DecimalField(max_digits=10, decimal_places=2)
-    currentbid = models.ForeignKey('Bid', on_delete=models.CASCADE, related_name='auctions', blank=True, null=True)
+    # currentbid = models.ForeignKey('Bid', on_delete=models.CASCADE, related_name='auctions', blank=True, null=True)
     buynowprice = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     addtime = models.DateTimeField(default=timezone.now)
     endtime = models.DateField(default=timezone.now() + timedelta(days=5))
+
+    def currentbid(self):
+        return Bid.objects.filter(item = self.item).order_by('-amount').first()
 
 
 class Favorite(models.Model):

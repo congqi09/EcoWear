@@ -44,11 +44,11 @@
                     {% for auction in data %}
                     <tr>
                         <td><a href="{% url 'item_detail' auction.itemid %}">{{ auction.item_name }}</a></td>
-                        <td>{{ auction.buyer }}</td>
+                        <td><a href="{% url 'send_message' auction.buyerid auction.itemid %}">{{ auction.buyer }}</td>
                         <td>{{ auction.start_price }}</td>
                         <td>{{ auction.current_price }}</td>
-                        <td>{{ auction.post_time }}</td>
-                        <td>{{ auction.end_time }}</td>
+                        <td>{{ auction.addtime }}</td>
+                        <td>{{ auction.endtime }}</td>
                         <td>{{ auction.status }}</td>
                         <td>Edit</td>
                     {% endfor %}
