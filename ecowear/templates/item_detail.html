@@ -35,7 +35,10 @@
       {% else %}
       <p class="top-margin-custom">No bids yet.</p>
 
-      <div id="countdown"></div>
+      <div id="countdownContainer" class="countdown-flex-container">
+        <p class="countdown-label"><strong> Bid time left:</strong></p>
+        <div id="countdown"></div>
+      </div>
 
       <script>
         // Calculate the target end time for the countdown
@@ -73,13 +76,16 @@
       </script>
 
       {% endif %} {% if user_is_seller %}
-      <p class="top-margin-custom">
+      <p class="top-margin-custom different-margin">
         <strong>You are the seller of this item.</strong>
       </p>
       {% else %} {% if user.is_authenticated %} {% if bidding_active %}
       <style>
         .top-margin-custom {
           margin-top: 20px;
+        }
+        .different-margin {
+          margin-top: 100px;
         }
       </style>
       <form method="post" id="bidForm" class="bid-form">
