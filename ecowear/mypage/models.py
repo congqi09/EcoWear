@@ -81,9 +81,10 @@ class Item(models.Model):
     itemcondition = models.CharField(db_column='itemCondition', max_length=15, blank=True, null=True)  # Field name made lowercase.
     image = models.CharField(max_length=255, blank=True, null=True)
     List_time = models.DateTimeField(default=timezone.now)
+    currentTime = models.DateTimeField(default=timezone.now)
 
     def is_bidding_active(self):
-        return timezone.now() < self.List_time + timedelta(days=5)
+        return self.currentTime < self.List_time + timedelta(days=5)
 
 
     class Meta:

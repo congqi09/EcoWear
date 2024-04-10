@@ -227,6 +227,7 @@ def item_detail(request, item_id):
     message_form = MessageForm()
     auction = get_object_or_404(Auction, item=item)
     seller = auction.seller
+    currentBuyer = auction.currentbid().user.username if auction.currentbid() else None
     BidUser = User.objects.get(username=request.user.username)
     message_form_url = reverse('send_message', kwargs={'receiver_id': auction.seller.userId, 'item_id': item.itemid})
     user_is_seller = BidUser == seller
@@ -265,8 +266,15 @@ def item_detail(request, item_id):
                     'seller_id': seller.userId,
                     'user_is_seller': user_is_seller,
                     'startPrice': startPrice,
+                    'currentBuyer': currentBuyer,
                     })
 
+def accept_current_bid(request, item_id):
+    item = get_object_or_404(Item, itemid=item_id)
+    item.currentTime = item.List_time + timedelta(days=10)
+    item.save()
+
+    return redirect('item_detail', item_id=item.itemid)
 
 @login_required
 def toggle_favorite(request, item_id):

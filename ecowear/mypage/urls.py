@@ -1,5 +1,5 @@
 from django.urls import path
-from mypage.views import add_item, getAuctionList, getBidList, signup_view, login_view, home_view, user_profile, edit_user_profile, logout_view, item_detail, toggle_favorite, my_favorites, send_message, message_list, message_detail
+from mypage.views import add_item, getAuctionList, getBidList, signup_view, login_view, home_view, user_profile, edit_user_profile, logout_view, item_detail, toggle_favorite, my_favorites, send_message, message_list, message_detail, accept_current_bid
 
 urlpatterns = [
     path('', home_view, name='home'),
@@ -18,5 +18,6 @@ urlpatterns = [
     path('send_message/<int:receiver_id>/<int:item_id>/', send_message, name='send_message'),
     path('messages/', message_list, name='messages'),
     path('message_detail/<int:message_id>/', message_detail, name='message_detail'),
+    path('item/<int:item_id>/accept_bid/', accept_current_bid, name='accept_current_bid'),
     # Add other URLs as needed
 ]

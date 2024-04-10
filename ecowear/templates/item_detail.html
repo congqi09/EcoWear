@@ -34,6 +34,7 @@
       </p>
       {% else %}
       <p class="top-margin-custom">No bids yet.</p>
+      {% endif %} {% if bidding_active %}
 
       <div id="countdownContainer" class="countdown-flex-container">
         <p class="countdown-label"><strong> Bid time left:</strong></p>
@@ -74,18 +75,34 @@
           }
         }, 1000);
       </script>
-
       {% endif %} {% if user_is_seller %}
       <p class="top-margin-custom different-margin">
         <strong>You are the seller of this item.</strong>
       </p>
-      {% else %} {% if user.is_authenticated %} {% if bidding_active %}
       <style>
         .top-margin-custom {
           margin-top: 20px;
         }
         .different-margin {
-          margin-top: 100px;
+          margin-top: 60px;
+        }
+      </style>
+      {% if bidding_active %}
+      <form action="{% url 'accept_current_bid' item.itemid %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">
+          Accept Current Highest Bid
+        </button>
+      </form>
+      {% else %}
+      <p>You accepted the price offered from: ${{ currentBuyer }}</p>
+      {% endif %} {% else %} {% if bidding_active %}
+      <style>
+        .top-margin-custom {
+          margin-top: 20px;
+        }
+        .different-margin {
+          margin-top: 60px;
         }
       </style>
       <form method="post" id="bidForm" class="bid-form">
@@ -107,15 +124,16 @@
           }
         };
       </script>
-
       <a
         href="{% url 'send_message' seller_id item.itemid %}"
         class="btn btn-primary top-margin-custom"
         >Contact Seller</a
       >
+
       {% else %}
       <p>The bidding session for this item is over.</p>
-      {% endif %} {% endif %} {% endif %}
+      {% endif %} {% endif %}
+
       <br /><br /><br />
     </div>
   </div>
