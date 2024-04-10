@@ -31,8 +31,8 @@
     <tbody>
       {% for bid in data %}
       <tr>
-        <td>{{ bid.title }}</td>
-        <td>{{ bid.seller_username }}</td>
+        <td><a href="{% url 'item_detail' bid.itemid %}">{{ bid.title }}</a></td>
+        <td><a href="{% url 'send_message' bid.sellerid bid.itemid %}">{{ bid.seller_username }}</a></td>
         <td>{{ bid.amount }}</td>
         <td>{{ bid.bidTime }}</td>
         <td>{{ bid.status }}</td>
