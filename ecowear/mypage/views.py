@@ -227,6 +227,7 @@ def item_detail(request, item_id):
     message_form = MessageForm()
     auction = get_object_or_404(Auction, item=item)
     seller = auction.seller
+    currentBuyerId = auction.currentbid().user.userId if auction.currentbid() else None
     currentBuyer = auction.currentbid().user.username if auction.currentbid() else None
     BidUser = User.objects.get(username=request.user.username)
     message_form_url = reverse('send_message', kwargs={'receiver_id': auction.seller.userId, 'item_id': item.itemid})
@@ -266,6 +267,7 @@ def item_detail(request, item_id):
                     'seller_id': seller.userId,
                     'user_is_seller': user_is_seller,
                     'startPrice': startPrice,
+                    'currentBuyerId': currentBuyerId,
                     'currentBuyer': currentBuyer,
                     })
 

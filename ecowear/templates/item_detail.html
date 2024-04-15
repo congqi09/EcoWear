@@ -95,7 +95,7 @@
         </button>
       </form>
       {% else %}
-      <p>You accepted the price offered from: ${{ currentBuyer }}</p>
+      <p>You accepted the price offered from: <a href="{% url 'send_message' currentBuyerId item.itemid %}">{{ currentBuyer }}</a></p>
       {% endif %} {% else %} {% if bidding_active %}
       <style>
         .top-margin-custom {

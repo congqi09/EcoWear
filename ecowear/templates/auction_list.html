@@ -45,7 +45,7 @@
                     <tr>
                         <td><a href="{% url 'item_detail' auction.itemid %}">{{ auction.item_name }}</a></td>
                         {% if auction.buyer %}
-                        <td><a href="{% url 'send_message' auction.buyerid auction.itemid %}">{{ auction.buyer }}</td>
+                        <td><a href="{% url 'send_message' auction.buyerid auction.itemid %}">{{ auction.buyer }}</a></td>
                         {% else %}
                         <td>No buyer yet</td>
                         {% endif %}
