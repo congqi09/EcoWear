@@ -279,7 +279,7 @@ def accept_current_bid(request, item_id):
     item.currentTime = item.List_time + timedelta(days=10)
     item.save()
     auction = get_object_or_404(Auction, item=item)
-    auction.status = 'sold'
+    auction.status = 'expired'
     auction.save()
 
     return redirect('item_detail', item_id=item.itemid)
