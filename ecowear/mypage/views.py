@@ -269,10 +269,16 @@ def item_detail(request, item_id):
                     'currentBuyer': currentBuyer,
                     })
 
+@login_required
 def accept_current_bid(request, item_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
     item = get_object_or_404(Item, itemid=item_id)
     item.currentTime = item.List_time + timedelta(days=10)
     item.save()
+    auction = get_object_or_404(Auction, item=item)
+    auction.status = 'sold'
+    auction.save()
 
     return redirect('item_detail', item_id=item.itemid)
 
